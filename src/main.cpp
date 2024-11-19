@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-#include "calcfile.h"
+#include "calc_file_lib/calcfile.h"
 
 int main() {
     string filename;
@@ -15,26 +15,9 @@ int main() {
     if (res) {
         cerr << "Bad file read! Aborting..." << endl;
         return 1;
-    } else {
-        calcfile.print();
-        /*
-        string rename;
-        cout << "Enter new name: ";
-        cin >> rename;
-
-        calcfile.set_name(rename);
-        */
-        calcfile.write();
-
-        /*
-        calcfile.set_name("BURGER");
-        calcfile.set_comment("burger time!");
-        calcfile.set_data("burger moment");
-        calcfile.set_archived(false);
-
-        calcfile.write();
-        */
     }
+
+    calcfile.print();
 
     return 0;
 }
