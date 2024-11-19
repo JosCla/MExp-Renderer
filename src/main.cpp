@@ -27,15 +27,16 @@ int main() {
     calcfile.print();
 
     MExpMap map(calcfile);
-    vector<vector<int>> island_nums = map.get_island_numbers();
+    vector<vector<MExpTileProps>> island_rows = map.get_tile_other_props();
 
-    for (vector<int> row : island_nums) {
-        for (int col : row) {
-            if (col == 0) {
+    for (vector<MExpTileProps> row : island_rows) {
+        for (MExpTileProps col : row) {
+            if (col.isWater == 0) {
                 cout << '0';
             } else {
-                cout << (char)(col + (int)'a' - 1);
+                cout << '.';
             }
+            // cout << (char)(col.textureIndex + (int)'a');
         }
         cout << endl;
     }

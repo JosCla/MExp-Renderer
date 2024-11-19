@@ -7,6 +7,9 @@ using std::string;
 #include <vector>
 using std::vector;
 
+// #include <iostream>
+// using namespace std;
+
 // Our files
 #include "mexpmap.h"
 #include "calc_file_lib/calcfile.h"
@@ -14,6 +17,14 @@ using std::vector;
 
 MExpMap::MExpMap(Calc8XvFile &file) {
     _parse_file(file);
+}
+
+int MExpMap::get_width() const {
+    return _width;
+}
+
+int MExpMap::get_height() const {
+    return _height;
 }
 
 vector<vector<int>> MExpMap::get_island_numbers() const {
@@ -50,6 +61,8 @@ void MExpMap::_parse_file(Calc8XvFile &file) {
 
     // getting and parsing raw portions
     string imap_raw = _get_raw_portion(file_data, imap_offset);
+    _width = hexCharsToInt(imap_raw.substr(0, 1));
+    _height = hexCharsToInt(imap_raw.substr(1, 1));
     _parse_imap(imap_raw);
     string idat_raw = _get_raw_portion(file_data, idat_offset);
     _parse_idat(idat_raw);
@@ -67,13 +80,10 @@ string MExpMap::_get_raw_portion(string &file_data, int offset) {
 void MExpMap::_parse_imap(string &imap_raw) {
     _imap_raw = imap_raw;
 
-    int width = hexCharsToInt(imap_raw.substr(0, 1));
-    int height = hexCharsToInt(imap_raw.substr(1, 1));
-
-    for (int i = 0; i < height; i++) {
+    for (int i = 0; i < _height; i++) {
         vector<int> row;
-        for (int j = 0; j < width; j++) {
-            int offset = (i * width) + j + 2;
+        for (int j = 0; j < _width; j++) {
+            int offset = (i * _width) + j + 2;
             int col = hexCharsToInt(imap_raw.substr(offset, 1));
             row.push_back(col);
         }
@@ -88,10 +98,36 @@ void MExpMap::_parse_idat(string &idat_raw) {
 
 void MExpMap::_parse_hmap(string &hmap_raw) {
     _hmap_raw = hmap_raw;
-    // TODO
+
+    for (int i = 0; i < _height; i++) {
+        vector<int> row;
+        for (int j = 0; j < _width; j++) {
+            int offset = (i * _width) + j + 2;
+            int col = hexCharsToInt(hmap_raw.substr(offset, 1));
+            row.push_back(col);
+        }
+        _heights.push_back(row);
+    }
 }
 
 void MExpMap::_parse_omap(string &omap_raw) {
     _omap_raw = omap_raw;
-    // TODO
+
+    for (int i = 0; i < _height; i++) {
+        vector<MExpTileProps> row;
+        for (int j = 0; j < _width; j++) {
+            int offset = (i * _width) + j + 2;
+            int col = hexCharsToInt(omap_raw.substr(offset, 1));
+
+            MExpTileProps tileProps;
+            tileProps.isLadder = ((col & 1) == 1);
+            tileProps.isWater = (((col >> 1) & 1) == 1);
+            tileProps.isStump = (((col >> 2) & 1) == 1);
+            tileProps.isRock = (((col >> 3) & 1) == 1);
+            tileProps.textureIndex = ((col >> 4) & 16);
+
+            row.push_back(tileProps);
+        }
+        _other_props.push_back(row);
+    }
 }

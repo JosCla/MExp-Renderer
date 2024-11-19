@@ -49,6 +49,8 @@ public:
     MExpMap(Calc8XvFile &file);
 
     // get various parts of the file
+    int get_width() const;
+    int get_height() const;
     std::vector<std::vector<int>> get_island_numbers() const;
     std::vector<MExpEntity> get_entities() const;
     std::vector<std::vector<int>> get_heights() const;
@@ -56,6 +58,9 @@ public:
 
 private:
     // file components
+    int _width;
+    int _height;
+
     std::string _imap_raw;
     std::vector<std::vector<int>> _island_numbers;
 
