@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "calc_file_lib/calcfile.h"
+#include "mexpmap.h"
 
 int main() {
     string filename;
@@ -17,7 +18,14 @@ int main() {
         return 1;
     }
 
+    if (!calcfile.checksum_valid()) {
+        cerr << "Calc file has invalid checksum! Aborting..." << endl;
+        return 1;
+    }
+
     calcfile.print();
+
+    MExpMap map(calcfile);
 
     return 0;
 }

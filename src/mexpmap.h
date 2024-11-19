@@ -70,6 +70,13 @@ private:
 
     // parsing the file
     void _parse_file(Calc8XvFile &file);
+
+    // (sub-routines for file parsing)
+    std::string _get_raw_portion(std::string &file_data, int offset);
+    void _parse_imap(std::string &imap_raw);
+    void _parse_idat(std::string &idat_raw);
+    void _parse_hmap(std::string &hmap_raw);
+    void _parse_omap(std::string &omap_raw);
 };
 
 #endif // MEXPMAP_H
