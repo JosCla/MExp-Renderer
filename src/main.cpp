@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 #include "calc_file_lib/calcfile.h"
@@ -26,6 +27,18 @@ int main() {
     calcfile.print();
 
     MExpMap map(calcfile);
+    vector<vector<int>> island_nums = map.get_island_numbers();
+
+    for (vector<int> row : island_nums) {
+        for (int col : row) {
+            if (col == 0) {
+                cout << '0';
+            } else {
+                cout << (char)(col + (int)'a' - 1);
+            }
+        }
+        cout << endl;
+    }
 
     return 0;
 }

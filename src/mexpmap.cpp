@@ -66,7 +66,19 @@ string MExpMap::_get_raw_portion(string &file_data, int offset) {
 
 void MExpMap::_parse_imap(string &imap_raw) {
     _imap_raw = imap_raw;
-    // TODO
+
+    int width = hexCharsToInt(imap_raw.substr(0, 1));
+    int height = hexCharsToInt(imap_raw.substr(1, 1));
+
+    for (int i = 0; i < height; i++) {
+        vector<int> row;
+        for (int j = 0; j < width; j++) {
+            int offset = (i * width) + j + 2;
+            int col = hexCharsToInt(imap_raw.substr(offset, 1));
+            row.push_back(col);
+        }
+        _island_numbers.push_back(row);
+    }
 }
 
 void MExpMap::_parse_idat(string &idat_raw) {
