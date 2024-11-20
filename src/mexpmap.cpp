@@ -31,10 +31,13 @@ vector<vector<int>> MExpMap::get_island_numbers() const {
     return _island_numbers;
 }
 
-vector<MExpEntity> MExpMap::get_entities() const {
+vector<MExpEntity> MExpMap::get_entities(bool include_player) const {
     vector<MExpEntity> ents;
 
     for (MExpIsland island : _island_data) {
+        if (include_player && island.isFirstIsland) {
+            ents.push_back(_get_player_respawned(island));
+        }
         for (MExpEntity entity : island.entities) {
             ents.push_back(entity);
         }
@@ -72,7 +75,7 @@ void MExpMap::_parse_file(Calc8XvFile &file) {
     _parse_omap(omap_raw);
 }
 
-string MExpMap::_get_raw_portion(string &file_data, int offset) {
+string MExpMap::_get_raw_portion(string &file_data, int offset) const {
     int size = hexCharsToInt(file_data.substr(offset - 2, 2));
     return file_data.substr(offset, size);
 }
@@ -93,7 +96,46 @@ void MExpMap::_parse_imap(string &imap_raw) {
 
 void MExpMap::_parse_idat(string &idat_raw) {
     _idat_raw = idat_raw;
-    // TODO
+
+    int num_islands = hexCharsToInt(idat_raw.substr(0, 2));
+    for (int i = 1; i <= num_islands; i++) {
+        int island_offset = hexCharsToInt(idat_raw.substr(i * 2, 2));
+
+        MExpIsland island;
+        island.islandNum = i;
+        island.respawnX = hexCharsToInt(idat_raw.substr(island_offset + 1, 1));
+        island.respawnY = hexCharsToInt(idat_raw.substr(island_offset + 2, 1));
+        island.respawnZ = hexCharsToInt(idat_raw.substr(island_offset + 3, 1));
+        island.isFirstIsland
+            = hexCharsToInt(idat_raw.substr(island_offset + 4, 1)) == 1;
+        island.prevIslandNum
+            = hexCharsToInt(idat_raw.substr(island_offset + 5, 1));
+        island.nextIslandNum
+            = hexCharsToInt(idat_raw.substr(island_offset + 6, 1));
+
+        int num_ents = hexCharsToInt(idat_raw.substr(island_offset, 1));
+        for (int j = 1; j <= num_ents; j++) {
+            int entity_offset = island_offset + (j * 8);
+
+            MExpEntity entity;
+            entity.type = hexCharsToInt(idat_raw.substr(entity_offset, 1));
+            entity.x = hexCharsToInt(idat_raw.substr(entity_offset + 1, 1));
+            entity.y = hexCharsToInt(idat_raw.substr(entity_offset + 2, 1));
+            entity.islandNum
+                = hexCharsToInt(idat_raw.substr(entity_offset + 3, 1));
+            entity.entityNum
+                = hexCharsToInt(idat_raw.substr(entity_offset + 4, 1));
+            entity.z = hexCharsToInt(idat_raw.substr(entity_offset + 5, 1));
+            entity.extraByte1
+                = hexCharsToInt(idat_raw.substr(entity_offset + 6, 1));
+            entity.extraByte2
+                = hexCharsToInt(idat_raw.substr(entity_offset + 7, 1));
+
+            island.entities.push_back(entity);
+        }
+
+        _island_data.push_back(island);
+    }
 }
 
 void MExpMap::_parse_hmap(string &hmap_raw) {
@@ -130,4 +172,18 @@ void MExpMap::_parse_omap(string &omap_raw) {
         }
         _other_props.push_back(row);
     }
+}
+
+MExpEntity MExpMap::_get_player_respawned(MExpIsland island) const {
+    MExpEntity player;
+    player.type = 0;
+    player.x = island.respawnX;
+    player.y = island.respawnY;
+    player.islandNum = 0;
+    player.entityNum = 0;
+    player.z = island.respawnZ;
+    player.extraByte1 = 0;
+    player.extraByte2 = 0;
+
+    return player;
 }

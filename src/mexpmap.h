@@ -52,7 +52,7 @@ public:
     int get_width() const;
     int get_height() const;
     std::vector<std::vector<int>> get_island_numbers() const;
-    std::vector<MExpEntity> get_entities() const;
+    std::vector<MExpEntity> get_entities(bool include_player = true) const;
     std::vector<std::vector<int>> get_heights() const;
     std::vector<std::vector<MExpTileProps>> get_tile_other_props() const;
 
@@ -77,11 +77,14 @@ private:
     void _parse_file(Calc8XvFile &file);
 
     // (sub-routines for file parsing)
-    std::string _get_raw_portion(std::string &file_data, int offset);
+    std::string _get_raw_portion(std::string &file_data, int offset) const;
     void _parse_imap(std::string &imap_raw);
     void _parse_idat(std::string &idat_raw);
     void _parse_hmap(std::string &hmap_raw);
     void _parse_omap(std::string &omap_raw);
+
+    // other helpers
+    MExpEntity _get_player_respawned(MExpIsland island) const;
 };
 
 #endif // MEXPMAP_H
