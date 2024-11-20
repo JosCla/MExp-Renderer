@@ -31,7 +31,9 @@ int main() {
     MExpMap map(calcfile);
     MExpRender render(map);
 
-    string out_path = "hello.ppm";
+    string out_path;
+    cout << "Enter output path: ";
+    cin >> out_path;
     render.export_render(out_path);
 
     return 0;
