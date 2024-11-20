@@ -6,6 +6,7 @@ using namespace std;
 #include "calc_file_lib/calcfile.h"
 #include "mexpmap.h"
 #include "sprite.h"
+#include "image.h"
 
 int main() {
     string filename;
@@ -42,6 +43,16 @@ int main() {
     }
 
     SpriteRegistry::initialize();
+    Image img(255, 255, 255);
+
+    img.queue_sprite(SpriteRegistry::water_sprite, 0, 0);
+    img.queue_sprite(SpriteRegistry::rock_sprite, -8, 8);
+    img.queue_sprite(SpriteRegistry::rock_sprite, 0, 8);
+    img.queue_sprite(SpriteRegistry::rock_sprite, 8, 8);
+    img.queue_sprite(SpriteRegistry::entity_sprites.at(0), 8, 16);
+    img.run_sprite_queue();
+    string out_path = "hello.ppm";
+    img.export_ppm(out_path);
 
     return 0;
 }

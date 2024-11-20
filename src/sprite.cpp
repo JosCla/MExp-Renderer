@@ -30,6 +30,7 @@ Sprite::Sprite(string &sprite_str) {
 
             curr_row.push_back(first_bit * 2 + second_bit);
         }
+        _colors.push_back(curr_row);
     }
 }
 
@@ -53,9 +54,9 @@ int Sprite::_hex_ascii_to_int(char hex) {
     if (hex >= '0' && hex <= '9') {
         return (int)hex - (int)'0';
     } else if (hex >= 'A' && hex <= 'F') {
-        return (int)hex - (int)'A';
+        return (int)hex - (int)'A' + 10;
     } else if (hex >= 'a' && hex <= 'a') {
-        return (int)hex - (int)'a';
+        return (int)hex - (int)'a' + 10;
     }
 
     return 0;
@@ -66,6 +67,7 @@ vector<Sprite> SpriteRegistry::ground_sprites = {};
 vector<Sprite> SpriteRegistry::wall_sprites = {};
 
 string zero_str = "00000000000000000000000000000000";
+// string zero_str = "ffffffffffffffffffffffffffffffff";
 Sprite SpriteRegistry::water_sprite = Sprite(zero_str);
 Sprite SpriteRegistry::rock_sprite = Sprite(zero_str);
 Sprite SpriteRegistry::stump_sprite = Sprite(zero_str);
