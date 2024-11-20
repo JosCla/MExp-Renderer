@@ -5,6 +5,7 @@ using namespace std;
 
 #include "calc_file_lib/calcfile.h"
 #include "mexpmap.h"
+#include "sprite.h"
 
 int main() {
     string filename;
@@ -39,6 +40,8 @@ int main() {
         }
         cout << endl;
     }
+
+    SpriteRegistry::initialize();
 
     return 0;
 }
