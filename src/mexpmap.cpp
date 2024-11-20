@@ -209,7 +209,7 @@ void MExpMap::_parse_omap(string &omap_raw) {
             tileProps.isWater = (((col >> 1) & 1) == 1);
             tileProps.isStump = (((col >> 2) & 1) == 1);
             tileProps.isRock = (((col >> 3) & 1) == 1);
-            tileProps.textureIndex = ((col >> 4) & 16);
+            tileProps.textureIndex = ((col >> 4) & 15);
 
             row.push_back(tileProps);
         }
