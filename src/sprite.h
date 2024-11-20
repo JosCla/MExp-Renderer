@@ -35,6 +35,13 @@ public:
     static Sprite water_sprite;
     static Sprite rock_sprite;
     static Sprite stump_sprite;
+
+    static Sprite left_edge_sprite;
+    static Sprite up_edge_sprite;
+    static Sprite right_edge_sprite;
+    static Sprite down_edge_sprite;
+
+    static std::vector<int> entity_upward_displacements;
 };
 
 #endif // SPRITE_H

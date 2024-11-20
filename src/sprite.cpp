@@ -41,12 +41,12 @@ vector<vector<int>> Sprite::get_colors() const {
 vector<int> Sprite::get_rgb(int color) {
     switch (color) {
     case 1:
-        return {255, 255, 255};
+        return {160, 176, 160};
     case 2:
-        return {127, 127, 127};
+        return {119, 131, 119};
     case 3:
     default:
-        return {0, 0, 0};
+        return {33, 33, 33};
     }
 }
 
@@ -71,6 +71,12 @@ string zero_str = "00000000000000000000000000000000";
 Sprite SpriteRegistry::water_sprite = Sprite(zero_str);
 Sprite SpriteRegistry::rock_sprite = Sprite(zero_str);
 Sprite SpriteRegistry::stump_sprite = Sprite(zero_str);
+Sprite SpriteRegistry::left_edge_sprite = Sprite(zero_str);
+Sprite SpriteRegistry::up_edge_sprite = Sprite(zero_str);
+Sprite SpriteRegistry::right_edge_sprite = Sprite(zero_str);
+Sprite SpriteRegistry::down_edge_sprite = Sprite(zero_str);
+
+vector<int> SpriteRegistry::entity_upward_displacements = {};
 
 void SpriteRegistry::initialize() {
     // initializing entities
@@ -121,4 +127,16 @@ void SpriteRegistry::initialize() {
     rock_sprite = Sprite(rock_str);
     string stump_str = "0018243C7E3C000000183C3C423C0000";
     stump_sprite = Sprite(stump_str);
+
+    string left_str = "80808080808080808080808080808080";
+    left_edge_sprite = Sprite(left_str);
+    string up_str = "FF00000000000000FF00000000000000";
+    up_edge_sprite = Sprite(up_str);
+    string right_str = "01010101010101010101010101010101";
+    right_edge_sprite = Sprite(right_str);
+    string down_str = "00000000000000FF00000000000000FF";
+    down_edge_sprite = Sprite(down_str);
+
+    // finally injecting entity render upward displacements
+    entity_upward_displacements = {3, 1, 1, 0, 0, 1, 1, 2, 2, 0};
 }

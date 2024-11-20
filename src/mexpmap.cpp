@@ -6,6 +6,8 @@
 using std::string;
 #include <vector>
 using std::vector;
+#include <algorithm>
+using std::sort;
 
 // #include <iostream>
 // using namespace std;
@@ -14,6 +16,10 @@ using std::vector;
 #include "mexpmap.h"
 #include "calc_file_lib/calcfile.h"
 #include "calc_file_lib/fileutils.h"
+
+bool MExpEntity::operator < (const MExpEntity &other) {
+    return z < other.z;
+}
 
 MExpMap::MExpMap(Calc8XvFile &file) {
     _parse_file(file);
@@ -52,6 +58,43 @@ vector<vector<int>> MExpMap::get_heights() const {
 
 vector<vector<MExpTileProps>> MExpMap::get_tile_other_props() const {
     return _other_props;
+}
+
+MExpTileProps MExpMap::get_other_at(int x, int y) const {
+    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+        return _other_props.at(y).at(x);
+    }
+
+    MExpTileProps default_props;
+    default_props.isWater = true;
+    default_props.isRock = false;
+    default_props.isStump = false;
+    default_props.isLadder = false;
+    default_props.textureIndex = 0;
+    return default_props;
+}
+
+int MExpMap::get_height_at(int x, int y, bool with_stumps) const {
+    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+        int res = _heights.at(y).at(x);
+        if (with_stumps) {
+            MExpTileProps curr_props = get_other_at(x, y);
+            if (curr_props.isStump) {res--;}
+        }
+        return res;
+    }
+    return 0;
+}
+
+vector<MExpEntity> MExpMap::get_sorted_entities_at(int x, int y) const {
+    vector<MExpEntity> res;
+    for (MExpEntity ent : get_entities()) {
+        if (ent.x == x && ent.y == y) res.push_back(ent);
+    }
+
+    sort(res.begin(), res.end());
+
+    return res;
 }
 
 void MExpMap::_parse_file(Calc8XvFile &file) {

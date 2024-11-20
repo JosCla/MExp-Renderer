@@ -19,6 +19,8 @@ public:
     int z;
     int extraByte1;
     int extraByte2;
+
+    bool operator < (const MExpEntity &other);
 };
 
 struct MExpIsland {
@@ -55,6 +57,11 @@ public:
     std::vector<MExpEntity> get_entities(bool include_player = true) const;
     std::vector<std::vector<int>> get_heights() const;
     std::vector<std::vector<MExpTileProps>> get_tile_other_props() const;
+
+    // (per-tile getters)
+    MExpTileProps get_other_at(int x, int y) const;
+    int get_height_at(int x, int y, bool with_stumps = false) const;
+    std::vector<MExpEntity> get_sorted_entities_at(int x, int y) const;
 
 private:
     // file components
