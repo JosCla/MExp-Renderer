@@ -2,4 +2,5 @@
 *.8xv
 *.o
 main
-*.ppm
+data/
+out/
